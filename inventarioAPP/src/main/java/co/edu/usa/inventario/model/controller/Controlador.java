@@ -4,13 +4,13 @@
  */
 package co.edu.usa.inventario.model.controller;
 
-import co.edu.usa.inventario.model.Productos;
-import co.edu.usa.inventario.model.repositories.RepositorioProductos;
+import co.edu.usa.inventario.model.Producto;
 import co.edu.usa.inventario.view.Vista;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import co.edu.usa.inventario.model.repositories.RepositorioProducto;
 
 /**
  *
@@ -18,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Controlador implements ActionListener{
 
-    RepositorioProductos repositorio;
+    RepositorioProducto repositorio;
     Vista vista;
 
     public Controlador() {
@@ -30,7 +30,7 @@ public class Controlador implements ActionListener{
      * @param repositorio
      * @param vista
      */
-    public Controlador(RepositorioProductos repositorio, Vista vista) {
+    public Controlador(RepositorioProducto repositorio, Vista vista) {
         this.repositorio = repositorio;
         this.vista = vista;
         agregarEventos();
@@ -43,7 +43,7 @@ public class Controlador implements ActionListener{
         String nombre = vista.getTxtNombre().getText();
         Double precio = Double.parseDouble(vista.getTxtPrecio().getText());
         Integer inventario = Integer.parseInt(vista.getTxtInventario().getText());
-        Productos productoActualizar = new Productos(nombre, precio, inventario);
+        Producto productoActualizar = new Producto(nombre, precio, inventario);
         if(verificarExistencia(productoActualizar) && validarCampos(productoActualizar)){
             
         }else{
@@ -59,7 +59,7 @@ public class Controlador implements ActionListener{
         String nombre = vista.getTxtNombre().getText();
         Double precio = Double.parseDouble(vista.getTxtPrecio().getText());
         Integer inventario = Integer.parseInt(vista.getTxtInventario().getText());
-        Productos productoCrear = new Productos(nombre, precio, inventario);
+        Producto productoCrear = new Producto(nombre, precio, inventario);
         if(!verificarExistencia(productoCrear) && validarCampos(productoCrear)){
             repositorio.save(productoCrear);
         }else{
@@ -71,10 +71,10 @@ public class Controlador implements ActionListener{
     
     
     public void listar(){
-        List<Productos>  listarProducto = (List<Productos>) repositorio.findAll();
+        List<Producto>  listarProducto = (List<Producto>) repositorio.findAll();
         DefaultTableModel modeloTabla = new DefaultTableModel(new Object[]{"Codigo", "Nombre", "Precio", "Inventario"}, 0);
         
-        for(Productos p : listarProducto){
+        for(Producto p : listarProducto){
             modeloTabla.addRow(new Object[]{p.getCodigo(),p.getNombre(),p.getPrecio(),p.getInventario()} );
         }
         vista.getTblInventario().setModel(modeloTabla);
@@ -91,17 +91,17 @@ public class Controlador implements ActionListener{
         String nombre = vista.getTxtNombre().getText();
         Double precio = Double.parseDouble(vista.getTxtPrecio().getText());
         Integer inventario = Integer.parseInt(vista.getTxtInventario().getText());
-        Productos productoEliminar = new Productos(nombre, precio, inventario);
+        Producto productoEliminar = new Producto(nombre, precio, inventario);
         if(verificarExistencia(productoEliminar)){
             
         }
         
     }
     
-    private boolean verificarExistencia(Productos productoEntrada){
-         List<Productos>  listarProducto = (List<Productos>) repositorio.findAll();
+    private boolean verificarExistencia(Producto productoEntrada){
+         List<Producto>  listarProducto = (List<Producto>) repositorio.findAll();
         
-        for(Productos p : listarProducto){
+        for(Producto p : listarProducto){
             if(productoEntrada.getNombre().equals(p.getNombre())){
                 return true;
             }           
@@ -109,7 +109,7 @@ public class Controlador implements ActionListener{
         return false;
     }
     
-    private boolean validarCampos(Productos productoEntrada){
+    private boolean validarCampos(Producto productoEntrada){
         return true;
     }
     

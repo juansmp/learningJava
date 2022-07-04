@@ -4,7 +4,7 @@
  */
 package co.edu.usa.inventario.model.repositories;
 
-import co.edu.usa.inventario.model.Productos;
+import co.edu.usa.inventario.model.Producto;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository;
  * @author Administrador
  */
 @Repository
-public interface RepositorioProductos extends CrudRepository<Productos, Integer> {
+public interface RepositorioProducto extends CrudRepository<Producto, Long> {
     
 }

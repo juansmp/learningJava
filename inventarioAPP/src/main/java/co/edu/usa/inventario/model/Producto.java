@@ -12,14 +12,15 @@ import org.springframework.data.relational.core.mapping.Table;
  */
 /* Con el siguiente decorador o anotación se relaciona la clase con una tabla en la base de datos */
 @Table("Productos")
-public class Productos {
+public class Producto {
+    /* Se define el atributo codigo como la llave primaria de la base de datos */ 
     @Id
-    private Integer codigo;
+    private Long codigo;
     private String nombre;
     private Double precio;
     private Integer inventario;
 
-    public Productos() {
+    public Producto() {
     }
     
     /**
@@ -29,7 +30,7 @@ public class Productos {
      * @param precio
      * @param inventario 
      */
-    public Productos(Integer codigo, String nombre, Double precio, Integer inventario) {
+    public Producto(Long codigo, String nombre, Double precio, Integer inventario) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.precio = precio;
@@ -43,7 +44,7 @@ public class Productos {
      * @param precio
      * @param inventario 
      */
-    public Productos(String nombre, Double precio, Integer inventario) {
+    public Producto(String nombre, Double precio, Integer inventario) {
         this.nombre = nombre;
         this.precio = precio;
         this.inventario = inventario;
@@ -51,7 +52,7 @@ public class Productos {
 
     
 
-    public Integer getCodigo() {
+    public Long getCodigo() {
         return codigo;
     }
 
@@ -67,7 +68,7 @@ public class Productos {
         return inventario;
     }
 
-    public void setCodigo(Integer codigo) {
+    public void setCodigo(Long codigo) {
         this.codigo = codigo;
     }
 
