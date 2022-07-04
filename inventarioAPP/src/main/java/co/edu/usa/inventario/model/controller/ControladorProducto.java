@@ -16,12 +16,15 @@ import co.edu.usa.inventario.model.repositories.RepositorioProducto;
  *
  * @author Administrador
  */
-public class Controlador implements ActionListener{
+public class ControladorProducto implements ActionListener{
 
     RepositorioProducto repositorio;
     Vista vista;
 
-    public Controlador() {
+    /**
+     * Constructor vacío
+     */
+    public ControladorProducto() {
         super();
     }
 
@@ -30,21 +33,25 @@ public class Controlador implements ActionListener{
      * @param repositorio
      * @param vista
      */
-    public Controlador(RepositorioProducto repositorio, Vista vista) {
+    public ControladorProducto(RepositorioProducto repositorio, Vista vista) {
         this.repositorio = repositorio;
         this.vista = vista;
         agregarEventos();
         this.vista.setVisible(true);
-        this.listar();
+        this.ListarProductos();
         
     }
     
-    public void actualizar(ActionEvent e){
+    /**
+     * Método que permite actualizar un producto existente en la base de datos.
+     * @param e 
+     */
+    public void ActualizarProducto(ActionEvent e){
         String nombre = vista.getTxtNombre().getText();
         Double precio = Double.parseDouble(vista.getTxtPrecio().getText());
         Integer inventario = Integer.parseInt(vista.getTxtInventario().getText());
         Producto productoActualizar = new Producto(nombre, precio, inventario);
-        if(verificarExistencia(productoActualizar) && validarCampos(productoActualizar)){
+        if(verificarExistencia(productoActualizar) && validarCampos()){
             
         }else{
             
@@ -52,25 +59,31 @@ public class Controlador implements ActionListener{
         
     }
     /**
-     * Método que permite crear un producto en la base de datos.     
+     * Método que permite CrearProducto un producto en la base de datos.     
      * @param e
      */
-    public void crear(ActionEvent e){
-        String nombre = vista.getTxtNombre().getText();
-        Double precio = Double.parseDouble(vista.getTxtPrecio().getText());
-        Integer inventario = Integer.parseInt(vista.getTxtInventario().getText());
-        Producto productoCrear = new Producto(nombre, precio, inventario);
-        if(!verificarExistencia(productoCrear) && validarCampos(productoCrear)){
-            repositorio.save(productoCrear);
-        }else{
-            
-        }
-        this.listar();
+    public void CrearProducto(ActionEvent e){
         
+        if(validarCampos()){
+            String nombre = vista.getTxtNombre().getText();
+            Double precio = Double.parseDouble(vista.getTxtPrecio().getText());
+            Integer inventario = Integer.parseInt(vista.getTxtInventario().getText());
+            Producto productoCrear = new Producto(nombre, precio, inventario);
+            if(!verificarExistencia(productoCrear)){
+                repositorio.save(productoCrear);
+            }else{
+
+            }
+        }else{
+        
+        }
+        this.ListarProductos();        
     }
     
-    
-    public void listar(){
+    /**
+     * Método que permite listar los productos existentes en la base de datos.
+     */
+    public void ListarProductos(){
         List<Producto>  listarProducto = (List<Producto>) repositorio.findAll();
         DefaultTableModel modeloTabla = new DefaultTableModel(new Object[]{"Codigo", "Nombre", "Precio", "Inventario"}, 0);
         
@@ -81,13 +94,12 @@ public class Controlador implements ActionListener{
         
     }
     
-    public void buscar(ActionEvent e){
-        
-    }
     
-    
-    
-    public void eliminar(ActionEvent e){
+    /**
+     * Método que permite eliminar un producto existente en la base de datos.
+     * @param e 
+     */
+    public void EliminarProducto(ActionEvent e){
         String nombre = vista.getTxtNombre().getText();
         Double precio = Double.parseDouble(vista.getTxtPrecio().getText());
         Integer inventario = Integer.parseInt(vista.getTxtInventario().getText());
@@ -95,6 +107,17 @@ public class Controlador implements ActionListener{
         if(verificarExistencia(productoEliminar)){
             
         }
+        
+    }
+    
+    /**
+     * Método que permite generar el informe de los productos existentes en la base de datos.
+     * Se obtiene el nombre del producto con el precio mayor; el nombre del producto con el 
+     * precio menor; el promedio de precios de todos los productos y el valor total del 
+     * inventario a la fecha.
+     * @param e 
+     */    
+    public void GenerarInforme(ActionEvent e){
         
     }
     
@@ -109,9 +132,19 @@ public class Controlador implements ActionListener{
         return false;
     }
     
-    private boolean validarCampos(Producto productoEntrada){
-        return true;
+    private boolean validarCampos(){
+        String nombre = vista.getTxtNombre().getText();
+        String precio = vista.getTxtPrecio().getText();
+        String inventario = vista.getTxtInventario().getText();
+        if((nombre.contentEquals("")) || (precio.contentEquals("")) || (inventario.contentEquals(""))){
+            return false;
+        }else{
+            return true;
+        }
     }
+    
+    
+    
     
     
     private void agregarEventos(){
@@ -125,14 +158,14 @@ public class Controlador implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == vista.getBtnAgregar()){
-            crear(e);
+            CrearProducto(e);
             
         }
         if(e.getSource() == vista.getBtnActualizar()){
-            actualizar(e);
+            ActualizarProducto(e);
         }
         if(e.getSource() == vista.getBtnBorrar()){
-            eliminar(e);
+            EliminarProducto(e);
         }
         if(e.getSource() == vista.getBtnLimpiar()){
             
