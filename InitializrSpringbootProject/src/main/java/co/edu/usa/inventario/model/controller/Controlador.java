@@ -40,6 +40,15 @@ public class Controlador implements ActionListener{
     }
     
     public void actualizar(ActionEvent e){
+        String nombre = vista.getTxtNombre().getText();
+        Double precio = Double.parseDouble(vista.getTxtPrecio().getText());
+        Integer inventario = Integer.parseInt(vista.getTxtInventario().getText());
+        Productos productoActualizar = new Productos(nombre, precio, inventario);
+        if(verificarExistencia(productoActualizar) && validarCampos(productoActualizar)){
+            
+        }else{
+            
+        }
         
     }
     /**
@@ -50,8 +59,11 @@ public class Controlador implements ActionListener{
         String nombre = vista.getTxtNombre().getText();
         Double precio = Double.parseDouble(vista.getTxtPrecio().getText());
         Integer inventario = Integer.parseInt(vista.getTxtInventario().getText());
-        if(validarCampos()){
-            repositorio.save(new Productos(nombre, precio, inventario));
+        Productos productoCrear = new Productos(nombre, precio, inventario);
+        if(!verificarExistencia(productoCrear) && validarCampos(productoCrear)){
+            repositorio.save(productoCrear);
+        }else{
+            
         }
         this.listar();
         
@@ -76,10 +88,28 @@ public class Controlador implements ActionListener{
     
     
     public void eliminar(ActionEvent e){
+        String nombre = vista.getTxtNombre().getText();
+        Double precio = Double.parseDouble(vista.getTxtPrecio().getText());
+        Integer inventario = Integer.parseInt(vista.getTxtInventario().getText());
+        Productos productoEliminar = new Productos(nombre, precio, inventario);
+        if(verificarExistencia(productoEliminar)){
+            
+        }
         
     }
     
-    private boolean validarCampos(){
+    private boolean verificarExistencia(Productos productoEntrada){
+         List<Productos>  listarProducto = (List<Productos>) repositorio.findAll();
+        
+        for(Productos p : listarProducto){
+            if(productoEntrada.getNombre().equals(p.getNombre())){
+                return true;
+            }           
+        }
+        return false;
+    }
+    
+    private boolean validarCampos(Productos productoEntrada){
         return true;
     }
     

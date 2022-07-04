@@ -10,7 +10,7 @@ import org.springframework.data.relational.core.mapping.Table;
  *
  * @author Administrador
  */
-// Con el siguiente decorador o anotación se relaciona la clase con una tabla en la base d edatos
+/* Con el siguiente decorador o anotación se relaciona la clase con una tabla en la base de datos */
 @Table("Productos")
 public class Productos {
     @Id
@@ -22,7 +22,13 @@ public class Productos {
     public Productos() {
     }
     
-    
+    /**
+     * Constructor donde se especifica código del producto.
+     * @param codigo
+     * @param nombre
+     * @param precio
+     * @param inventario 
+     */
     public Productos(Integer codigo, String nombre, Double precio, Integer inventario) {
         this.codigo = codigo;
         this.nombre = nombre;
@@ -32,7 +38,7 @@ public class Productos {
     
     
     /**
-     * Constructor sin el código del producto
+     * Constructor sin el código del producto, es decir, autoincremental
      * @param nombre
      * @param precio
      * @param inventario 
