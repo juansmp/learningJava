@@ -102,7 +102,11 @@ public class ControladorProducto implements ActionListener {
             Integer inventario = (Integer) vista.getTblInventario().getValueAt(fila, 3);
             Producto productoEliminar = new Producto(nombre, precio, inventario);
             if (verificarExistencia(productoEliminar)) {
-                repositorio.deleteById(codigo);
+                Integer opcion = JOptionPane.showConfirmDialog(vista, "¿Está seguro que desea eliminar el producto \"" + nombre + "\"?");
+                if (0 == opcion) {
+                    JOptionPane.showMessageDialog(vista, "Se ha eliminado el producto de la base de datos");
+                    repositorio.deleteById(codigo);
+                }
             } else {
                 /* El producto no existe */
                 JOptionPane.showMessageDialog(vista, "Error: El producto no existe.", "Error", JOptionPane.ERROR_MESSAGE);
