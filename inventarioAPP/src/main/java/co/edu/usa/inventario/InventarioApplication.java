@@ -2,14 +2,17 @@ package co.edu.usa.inventario;
 
 
 import co.edu.usa.inventario.model.controller.ControladorProducto;
-import co.edu.usa.inventario.view.Vista;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
 import co.edu.usa.inventario.model.repositories.RepositorioProducto;
+import co.edu.usa.inventario.view.Vista; //ok
+import org.springframework.beans.factory.annotation.Autowired; //ok
+import org.springframework.boot.ApplicationRunner; //ok
+import org.springframework.boot.SpringApplication; //ok
+import org.springframework.boot.autoconfigure.SpringBootApplication; //ok
+import org.springframework.boot.builder.SpringApplicationBuilder; //ok
+import org.springframework.context.ConfigurableApplicationContext; //ok
+import org.springframework.context.annotation.Bean; //ok
+
+
 
 @SpringBootApplication
 public class InventarioApplication {
