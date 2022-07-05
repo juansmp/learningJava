@@ -201,7 +201,18 @@ public class ControladorProducto implements ActionListener {
      * @param e
      */
     public void GenerarInforme(ActionEvent e) {
-        //TODO: implementar
+        if (repositorio.count() > 0) {
+            JPanel PnlInforme = new JPanel(new GridLayout(0, 1));
+            PnlInforme.add(new JLabel("Producto precio mayor: " + productoMayor().getNombre()));
+            PnlInforme.add(new JLabel("Producto precio menor: " + productoMenor().getNombre()));
+            PnlInforme.add(new JLabel("Promerio precios: $" + String.format("%.2f", promedioPrecioProductos())));
+            PnlInforme.add(new JLabel("Valor del inventario: $" + String.format("%.2f", totalInventario())));
+            JOptionPane.showMessageDialog(vista, PnlInforme, "Informacion", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            /* No hay productos en el repositorio. */
+            JOptionPane.showMessageDialog(vista,
+                    "Error: No hay productos en la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
@@ -274,6 +285,65 @@ public class ControladorProducto implements ActionListener {
         } else {
             return true;
         }
+    }
+
+    /**
+     * Método para obtener el producto de mayor valor.
+     * @return 
+     */
+    private Producto productoMayor() {
+        Producto productoMayor = null;
+        Double mayor = 0.0;
+        for (Producto producto : (List<Producto>) repositorio.findAll()) {
+            Double valorPrecio = producto.getPrecio();
+            if ((valorPrecio >= mayor) || (mayor == -1.0)) {
+                mayor = valorPrecio;
+                productoMayor = producto;
+            }
+        }
+        return productoMayor;
+    }
+
+    /**
+     * Método para obtener el producto de menor valor.
+     * @return 
+     */
+    private Producto productoMenor() {
+        Producto productoMenor = null;
+        Double menor = -1.0;
+        for (Producto producto : (List<Producto>) repositorio.findAll()) {
+            Double valorPrecio = producto.getPrecio();
+            if ((valorPrecio < menor) || (menor == -1.0)) {
+                menor = valorPrecio;
+                productoMenor = producto;
+            }
+        }
+        return productoMenor;
+    }
+
+    /**
+     * Método para obtener el total del inventario.
+     * @return 
+     */
+    private Double totalInventario() {
+        Double ValorDelInventario = 0.0;
+        for (Producto producto : (List<Producto>) repositorio.findAll()) {
+            ValorDelInventario += producto.getPrecio() * producto.getInventario();
+        }
+        return ValorDelInventario;
+    }
+
+    /**
+     * Método para obtener el promedio de los precios de los productos.
+     * @return 
+     */
+    private Double promedioPrecioProductos() {
+        Double sumaPrecios = 0.0;
+        for (Producto producto : (List<Producto>) repositorio.findAll()) {
+            sumaPrecios += producto.getPrecio();
+        }
+        return (sumaPrecios / repositorio.count());
+
     }
 
     /**
