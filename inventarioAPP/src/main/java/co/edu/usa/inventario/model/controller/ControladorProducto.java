@@ -11,7 +11,11 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import co.edu.usa.inventario.model.repositories.RepositorioProducto;
+import java.awt.GridLayout;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  *
@@ -50,15 +54,60 @@ public class ControladorProducto implements ActionListener {
      * @param e
      */
     public void ActualizarProducto(ActionEvent e) {
-        String nombre = vista.getTxtNombre().getText();
-        Double precio = Double.parseDouble(vista.getTxtPrecio().getText());
-        Integer inventario = Integer.parseInt(vista.getTxtInventario().getText());
-        Producto productoActualizar = new Producto(nombre, precio, inventario);
-        if (verificarExistencia(productoActualizar) && validarCampos()) {
+
+        int fila = vista.getTblInventario().getSelectedRow();
+        if (fila >= 0) {
+            if (verificarExistencia(
+                    new Producto((String) vista.getTblInventario().getValueAt(fila, 1),
+                            (Double) vista.getTblInventario().getValueAt(fila, 2),
+                            (Integer) vista.getTblInventario().getValueAt(fila, 3)))) {
+                Long codigo = (Long) vista.getTblInventario().getValueAt(fila, 0);
+                Producto p = repositorio.findById(codigo).get();
+                JTextField TxtNombreActualizar = new JTextField(p.getNombre());
+                JTextField TxtPrecioActualizar = new JTextField(String.valueOf(p.getPrecio()));
+                JTextField TxtInventarioActualizar = new JTextField(String.valueOf(p.getInventario()));
+                JPanel PnlActualizar = new JPanel(new GridLayout(0, 1));
+                PnlActualizar.add(new JLabel("Nombre: "));
+                PnlActualizar.add(TxtNombreActualizar);
+                PnlActualizar.add(new JLabel("Precio: "));
+                PnlActualizar.add(TxtPrecioActualizar);
+                PnlActualizar.add(new JLabel("Inventario: "));
+                PnlActualizar.add(TxtInventarioActualizar);
+                Integer opcion = JOptionPane.showOptionDialog(vista, PnlActualizar,
+                        "Actualizar Producto " + p.getNombre(), JOptionPane.OK_OPTION,
+                        JOptionPane.PLAIN_MESSAGE, null, new Object[]{"Actualizar Producto"}, 0);
+                if (JOptionPane.OK_OPTION == opcion) {
+                    /* Validación de campos vacíos */
+                    if ((TxtNombreActualizar.getText().contentEquals(""))
+                            || (TxtPrecioActualizar.getText().contentEquals(""))
+                            || (TxtInventarioActualizar.getText().contentEquals(""))) {
+                        /* Error en la validación de los campos */
+                        JOptionPane.showMessageDialog(vista,
+                                "Todos los campos son obligatorios.",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        repositorio.save(new Producto(codigo, TxtNombreActualizar.getText(),
+                                Double.parseDouble(TxtPrecioActualizar.getText()),
+                                Integer.parseInt(TxtInventarioActualizar.getText())));
+
+                        JOptionPane.showMessageDialog(vista,
+                                "El producto fue actualizado exitosamente.");
+                    }
+                }
+            } else {
+                /* El producto no existe */
+                JOptionPane.showMessageDialog(vista,
+                        "Error: El producto no existe.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
 
         } else {
-
+            /* El producto no se ha seleccionado */
+            JOptionPane.showMessageDialog(vista,
+                    "Error: Seleccione el producto que desea actualizar.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
+
+        this.ListarProductos();
 
     }
 
@@ -78,11 +127,14 @@ public class ControladorProducto implements ActionListener {
                 repositorio.save(productoCrear);
             } else {
                 /* El producto ya existe */
-                JOptionPane.showMessageDialog(vista, "Error: El producto ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(vista, "Error: El producto ya existe.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             /* Error en la validación de los campos */
-            JOptionPane.showMessageDialog(vista, "Error: Verifique que todos los campos estén completos.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(vista,
+                    "Todos los campos son obligatorios.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
         this.ListarProductos();
     }
@@ -102,18 +154,23 @@ public class ControladorProducto implements ActionListener {
             Integer inventario = (Integer) vista.getTblInventario().getValueAt(fila, 3);
             Producto productoEliminar = new Producto(nombre, precio, inventario);
             if (verificarExistencia(productoEliminar)) {
-                Integer opcion = JOptionPane.showConfirmDialog(vista, "¿Está seguro que desea eliminar el producto \"" + nombre + "\"?");
-                if (0 == opcion) {
-                    JOptionPane.showMessageDialog(vista, "Se ha eliminado el producto de la base de datos");
+                Integer opcion = JOptionPane.showConfirmDialog(vista,
+                        "¿Está seguro que desea eliminar el producto \"" + nombre + "\"?");
+                if (JOptionPane.OK_OPTION == opcion) {
+                    JOptionPane.showMessageDialog(vista,
+                            "El producto fue borrado exitosamente.");
                     repositorio.deleteById(codigo);
                 }
             } else {
                 /* El producto no existe */
-                JOptionPane.showMessageDialog(vista, "Error: El producto no existe.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(vista,
+                        "Error: El producto no existe.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             /* El producto no se ha seleccionado */
-            JOptionPane.showMessageDialog(vista, "Error: Seleccione el producto que desea eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(vista,
+                    "Error: Seleccione el producto que desea eliminar.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
 
         this.ListarProductos();
@@ -124,10 +181,12 @@ public class ControladorProducto implements ActionListener {
      */
     public void ListarProductos() {
         List<Producto> listarProducto = (List<Producto>) repositorio.findAll();
-        DefaultTableModel modeloTabla = new DefaultTableModel(new Object[]{"Codigo", "Nombre", "Precio", "Inventario"}, 0);
+        DefaultTableModel modeloTabla = new DefaultTableModel(new Object[]{"Codigo",
+            "Nombre", "Precio", "Inventario"}, 0);
 
         for (Producto p : listarProducto) {
-            modeloTabla.addRow(new Object[]{p.getCodigo(), p.getNombre(), p.getPrecio(), p.getInventario()});
+            modeloTabla.addRow(new Object[]{p.getCodigo(), p.getNombre(),
+                p.getPrecio(), p.getInventario()});
         }
         vista.getTblInventario().setModel(modeloTabla);
 
@@ -151,19 +210,29 @@ public class ControladorProducto implements ActionListener {
      * @param e
      */
     public void LimpiarProductos(ActionEvent e) {
-        Integer opcion = JOptionPane.showConfirmDialog(vista, "¿Está seguro que desea eliminar todos los productos?");
-        if (0 == opcion) {
-            JOptionPane.showMessageDialog(vista, "Se han limpiado los productos de la base de datos");
+        Integer opcion = JOptionPane.showConfirmDialog(vista,
+                "¿Está seguro que desea eliminar todos los productos?");
+        if (JOptionPane.OK_OPTION == opcion) {
+            JOptionPane.showMessageDialog(vista,
+                    "Se han limpiado los productos de la base de datos");
             repositorio.deleteAll();
         }
         this.ListarProductos();
     }
 
-    private boolean verificarExistencia(Producto productoEntrada) {
+    /**
+     * Método que permite verificar si un producto se encuentra en la base de
+     * datos, de acuerdo a su nombre.
+     *
+     * @param producto
+     * @return Retorna verdadero si el producto se encuentra en la base de
+     * datos, de lo contrario falso.
+     */
+    private boolean verificarExistencia(Producto producto) {
         List<Producto> listarProducto = (List<Producto>) repositorio.findAll();
 
         for (Producto p : listarProducto) {
-            if (productoEntrada.getNombre().equals(p.getNombre())) {
+            if (producto.getNombre().equals(p.getNombre())) {
                 return true;
             }
         }
@@ -172,36 +241,44 @@ public class ControladorProducto implements ActionListener {
 
     /**
      * Método que permite obtener Id de un producto existente en la base de
-     * datos
+     * datos, consultando por el nombre
      *
-     * @param productoEntrada
+     * @param producto
      * @return Devuelve el código del producto en la base de datos, si el
      * producto no existe o alguno de los campos no coincide devuelve 0
      */
-    private Long obtenerId(Producto productoEntrada) {
+    private Long obtenerId(Producto producto) {
         Long idProducto = 0L;
 
         for (Producto p : (List<Producto>) repositorio.findAll()) {
-            if ((productoEntrada.getNombre().equals(p.getNombre()))
-                    && (productoEntrada.getInventario().equals(p.getInventario()))
-                    && (productoEntrada.getPrecio().equals(p.getPrecio()))) {
+            if (producto.getNombre().equals(p.getNombre())) {
                 idProducto = p.getCodigo();
             }
         }
         return idProducto;
     }
 
+    /**
+     * Permite validar de los campos de entrada no se encuentren vacíos
+     *
+     * @return Devuelve falso si alguno de los campos de entrada se encuentra
+     * vacío, de lo contrario falso.
+     */
     private boolean validarCampos() {
         String nombre = vista.getTxtNombre().getText();
         String precio = vista.getTxtPrecio().getText();
         String inventario = vista.getTxtInventario().getText();
-        if ((nombre.contentEquals("")) || (precio.contentEquals("")) || (inventario.contentEquals(""))) {
+        if ((nombre.contentEquals("")) || (precio.contentEquals(""))
+                || (inventario.contentEquals(""))) {
             return false;
         } else {
             return true;
         }
     }
 
+    /**
+     * Se agregan listeners para los eventos de los botones.
+     */
     private void agregarEventos() {
         vista.getBtnAgregar().addActionListener(this);
         vista.getBtnActualizar().addActionListener(this);
@@ -210,11 +287,16 @@ public class ControladorProducto implements ActionListener {
         vista.getBtnGenerarInforme().addActionListener(this);
     }
 
+    /**
+     * Se conectan los eventos de los botones con los métodos implementados en
+     * el controlador.
+     *
+     * @param e
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == vista.getBtnAgregar()) {
             CrearProducto(e);
-
         }
         if (e.getSource() == vista.getBtnActualizar()) {
             ActualizarProducto(e);
