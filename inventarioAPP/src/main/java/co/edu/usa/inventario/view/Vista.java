@@ -241,7 +241,7 @@ public class Vista extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_TxtNombreActionPerformed
 
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnActualizar;
     private javax.swing.JButton BtnAgregar;
@@ -332,7 +332,5 @@ public class Vista extends javax.swing.JFrame {
     public void setTxtPrecio(JTextField TxtPrecio) {
         this.TxtPrecio = TxtPrecio;
     }
-
-
 
 }

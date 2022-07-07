@@ -1,11 +1,11 @@
 package co.edu.usa.inventario;
 
-
-import co.edu.usa.inventario.model.controller.Controlador;
-import co.edu.usa.inventario.model.repositories.RepositorioProductos;
+import co.edu.usa.inventario.model.controller.ControladorProducto;
+import co.edu.usa.inventario.model.repositories.RepositorioProducto;
 import co.edu.usa.inventario.view.Vista;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Bean;
 public class InventarioApplication {
 
     @Autowired
-    RepositorioProductos repositorio;
+    RepositorioProducto repositorio;
 
     public static void main(String[] args) {
         SpringApplicationBuilder builder = new SpringApplicationBuilder(InventarioApplication.class);
@@ -27,7 +27,7 @@ public class InventarioApplication {
     ApplicationRunner applicationRunner() {
         return args -> {
             Vista vista = new Vista();
-            Controlador controlador = new Controlador(repositorio, vista);
+            ControladorProducto controlador = new ControladorProducto(repositorio, vista);
 
         };
     }
