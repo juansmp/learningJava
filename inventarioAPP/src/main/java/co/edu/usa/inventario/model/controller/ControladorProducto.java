@@ -19,7 +19,7 @@ import javax.swing.JTextField;
 
 /**
  *
- * @author Administrador
+ * @author Juan Morant
  */
 public class ControladorProducto implements ActionListener {
 
@@ -54,7 +54,6 @@ public class ControladorProducto implements ActionListener {
      * @param e
      */
     public void ActualizarProducto(ActionEvent e) {
-
         int fila = vista.getTblInventario().getSelectedRow();
         if (fila >= 0) {
             if (verificarExistencia(
@@ -205,7 +204,7 @@ public class ControladorProducto implements ActionListener {
             JPanel PnlInforme = new JPanel(new GridLayout(0, 1));
             PnlInforme.add(new JLabel("Producto precio mayor: " + productoMayor().getNombre()));
             PnlInforme.add(new JLabel("Producto precio menor: " + productoMenor().getNombre()));
-            PnlInforme.add(new JLabel("Promerio precios: $" + String.format("%.2f", promedioPrecioProductos())));
+            PnlInforme.add(new JLabel("Promedio precios: $" + String.format("%.2f", promedioPrecioProductos())));
             PnlInforme.add(new JLabel("Valor del inventario: $" + String.format("%.2f", totalInventario())));
             JOptionPane.showMessageDialog(vista, PnlInforme, "Informacion", JOptionPane.INFORMATION_MESSAGE);
         } else {
@@ -251,25 +250,6 @@ public class ControladorProducto implements ActionListener {
     }
 
     /**
-     * Método que permite obtener Id de un producto existente en la base de
-     * datos, consultando por el nombre
-     *
-     * @param producto
-     * @return Devuelve el código del producto en la base de datos, si el
-     * producto no existe o alguno de los campos no coincide devuelve 0
-     */
-    private Long obtenerId(Producto producto) {
-        Long idProducto = 0L;
-
-        for (Producto p : (List<Producto>) repositorio.findAll()) {
-            if (producto.getNombre().equals(p.getNombre())) {
-                idProducto = p.getCodigo();
-            }
-        }
-        return idProducto;
-    }
-
-    /**
      * Permite validar de los campos de entrada no se encuentren vacíos
      *
      * @return Devuelve falso si alguno de los campos de entrada se encuentra
@@ -289,7 +269,8 @@ public class ControladorProducto implements ActionListener {
 
     /**
      * Método para obtener el producto de mayor valor.
-     * @return 
+     *
+     * @return
      */
     private Producto productoMayor() {
         Producto productoMayor = null;
@@ -306,7 +287,8 @@ public class ControladorProducto implements ActionListener {
 
     /**
      * Método para obtener el producto de menor valor.
-     * @return 
+     *
+     * @return
      */
     private Producto productoMenor() {
         Producto productoMenor = null;
@@ -323,7 +305,8 @@ public class ControladorProducto implements ActionListener {
 
     /**
      * Método para obtener el total del inventario.
-     * @return 
+     *
+     * @return
      */
     private Double totalInventario() {
         Double ValorDelInventario = 0.0;
@@ -335,7 +318,8 @@ public class ControladorProducto implements ActionListener {
 
     /**
      * Método para obtener el promedio de los precios de los productos.
-     * @return 
+     *
+     * @return
      */
     private Double promedioPrecioProductos() {
         Double sumaPrecios = 0.0;
@@ -347,7 +331,7 @@ public class ControladorProducto implements ActionListener {
     }
 
     /**
-     * Se agregan listeners para los eventos de los botones.
+     * Método para agregar listeners para los eventos de los botones.
      */
     private void agregarEventos() {
         vista.getBtnAgregar().addActionListener(this);
@@ -358,7 +342,7 @@ public class ControladorProducto implements ActionListener {
     }
 
     /**
-     * Se conectan los eventos de los botones con los métodos implementados en
+     * Método para conectar los eventos de los botones con los métodos implementados en
      * el controlador.
      *
      * @param e

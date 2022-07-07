@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 
 /**
  *
- * @author Administrador
+ * @author Juan Morant
  */
 @Repository
 public interface RepositorioProducto extends CrudRepository<Producto, Long> {
-    
+
 }
