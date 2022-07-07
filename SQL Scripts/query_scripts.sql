@@ -1,0 +1,1 @@
+SELECT edad, nombre FROM cliente WHERE nombre='';
