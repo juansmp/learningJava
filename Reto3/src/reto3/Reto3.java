@@ -23,40 +23,31 @@ public class Reto3 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
-        // TODO code application logic here
         run();
     }
 
     public static void run() {
         BaseDatosProductos BaseDatos = new BaseDatosProductos();
-        //BaseDatos.VerIntentario(); 
-        //while(true)
-        {
-            String Operacion = read();
-            String Datos = read();
-            String ArrDatos[] = Datos.split(" ");
+        String Operacion = read();
+        String Datos = read();
+        String ArrDatos[] = Datos.split(" ");
 
-            Producto ProductoEntrada = new Producto(Integer.parseInt(ArrDatos[0]), ArrDatos[1], Double.parseDouble(ArrDatos[2]), Integer.parseInt(ArrDatos[3]));
+        Producto ProductoEntrada = new Producto(Integer.parseInt(ArrDatos[0]), ArrDatos[1], Double.parseDouble(ArrDatos[2]), Integer.parseInt(ArrDatos[3]));
 
-            switch (Operacion) {
-                case "ACTUALIZAR":
-                    BaseDatos.Actualizar(ProductoEntrada);
-                    break;
-                case "BORRAR":
-                    BaseDatos.Eliminar(ProductoEntrada);
-                    break;
-                case "AGREGAR":
-                    BaseDatos.Agregar(ProductoEntrada);
-                    break;
-                default:
-                    throw new AssertionError();
-            }
-
+        switch (Operacion) {
+            case "ACTUALIZAR":
+                BaseDatos.Actualizar(ProductoEntrada);
+                break;
+            case "BORRAR":
+                BaseDatos.Eliminar(ProductoEntrada);
+                break;
+            case "AGREGAR":
+                BaseDatos.Agregar(ProductoEntrada);
+                break;
+            default:
+                throw new AssertionError();
         }
-
     }
-
 }
 
 class Producto {
@@ -88,6 +79,7 @@ class Producto {
     }
 
     /**
+     * Getter para obtener codigo
      *
      * @return
      */
@@ -96,6 +88,7 @@ class Producto {
     }
 
     /**
+     * Setter para configurar codigo
      *
      * @param codigo
      */
@@ -104,6 +97,7 @@ class Producto {
     }
 
     /**
+     * Getter para obtener nombre
      *
      * @return
      */
@@ -112,6 +106,7 @@ class Producto {
     }
 
     /**
+     * Setter para configurar nombre
      *
      * @param nombre
      */
@@ -120,6 +115,7 @@ class Producto {
     }
 
     /**
+     * Getter para obtener precio
      *
      * @return
      */
@@ -128,6 +124,7 @@ class Producto {
     }
 
     /**
+     * Setter para configurar precio
      *
      * @param precio
      */
@@ -136,6 +133,7 @@ class Producto {
     }
 
     /**
+     * Getter para obtener inventario
      *
      * @return
      */
@@ -165,10 +163,6 @@ class BaseDatosProductos {
         this.listaProductos = new HashMap<>();
         /**
          * Inicializar hashmap con datos existentes a la fecha en el inventario
-         * 1	Manzanas 5000.0	25 2	Limones 2300.0	15 3	Peras 2700.0	33 4
-         * Arandanos 9300.0	5 5	Tomates 2100.0	42 6	Fresas 4100.0	3 7	Helado
-         * 4500.0	41 8 Galletas 500.0	8 9	Chocolates 3500.0	80 10	Jamon 15000.0
-         * 10
          */
         this.listaProductos.put(1, new Producto(1, "Manzanas", 5000.0, 25));
         this.listaProductos.put(2, new Producto(2, "Limones", 2300.0, 15));
@@ -183,8 +177,10 @@ class BaseDatosProductos {
 
     }
 
+    /**
+     * Método para mostrar inventario
+     */
     public void VerIntentario() {
-        //System.out.println(this.listaProductos.toString());
         System.out.println("-----");
         System.out.println("Lista productos: ");
 
@@ -197,6 +193,11 @@ class BaseDatosProductos {
 
     }
 
+    /**
+     * Método para agregar un producto al inventario
+     *
+     * @param ProductoEntrada
+     */
     public void Agregar(Producto ProductoEntrada) {
         if (this.verificarExisencia(ProductoEntrada.getCodigo())) {
             System.out.println("ERROR");
@@ -206,6 +207,11 @@ class BaseDatosProductos {
         }
     }
 
+    /**
+     * Método para agregar un producto al inventario
+     *
+     * @param ProductoEntrada
+     */
     public void Actualizar(Producto ProductoEntrada) {
         if (this.verificarExisencia(ProductoEntrada.getCodigo())) {
             this.listaProductos.put(ProductoEntrada.getCodigo(), ProductoEntrada);
@@ -215,6 +221,11 @@ class BaseDatosProductos {
         }
     }
 
+    /**
+     * Método para eliminar un producto del inventario
+     *
+     * @param ProductoEntrada
+     */
     public void Eliminar(Producto ProductoEntrada) {
         if (this.verificarExisencia(ProductoEntrada.getCodigo())) {
             this.listaProductos.remove(ProductoEntrada.getCodigo());
@@ -224,11 +235,20 @@ class BaseDatosProductos {
         }
     }
 
+    /**
+     * Método para generar informe
+     */
     public void generarInforme() {
         System.out.print(productoMayor().getNombre() + " " + productoMenor().getNombre() + " ");
         System.out.printf("%.1f", promedioPrecioProductos());
     }
 
+    /**
+     * Método para verificar la existencia de un producto en el inventario
+     *
+     * @param codigo
+     * @return
+     */
     public boolean verificarExisencia(int codigo) {
         if (this.listaProductos.get(codigo) == null) {
             return false;
@@ -238,6 +258,11 @@ class BaseDatosProductos {
 
     }
 
+    /**
+     * Método para obtener el producto con el mayor precio
+     *
+     * @return
+     */
     public Producto productoMayor() {
         Producto productoMayor = null;
         Double mayor = 0.0;
@@ -251,6 +276,11 @@ class BaseDatosProductos {
         return productoMayor;
     }
 
+    /**
+     * Método para obtener el prodcuto con menor precio
+     *
+     * @return
+     */
     public Producto productoMenor() {
         Producto productoMenor = listaProductos.values().iterator().next();
         Double menor = productoMenor.getPrecio();
@@ -264,6 +294,11 @@ class BaseDatosProductos {
         return productoMenor;
     }
 
+    /**
+     * Método para obtener el total del inventario
+     *
+     * @return
+     */
     public Double totalInventario() {
         Double ValorDelInventario = 0.0;
         for (Producto value : listaProductos.values()) {
@@ -272,6 +307,11 @@ class BaseDatosProductos {
         return ValorDelInventario;
     }
 
+    /**
+     * Método para obtener el promedio de los precios de los productos
+     *
+     * @return
+     */
     public Double promedioPrecioProductos() {
         Double sumaPrecios = 0.0;
         for (Producto value : listaProductos.values()) {
